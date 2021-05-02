@@ -20,9 +20,10 @@ GLint winWidth = 800, winHeight = 600;
 // variavel de testes no teclado
 GLfloat z = 1;
 
-GLfloat moveping = 1.5;
+GLfloat moveping = 0.0, rotaping = 0.0;
 
 GLint direcao = 2;
+
 
 
 const double PI = 3.1415926535898;
@@ -250,7 +251,8 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(moveping, -0.6, 0.0);
+  glTranslatef(1.5, -0.6, moveping);
+  glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
 
@@ -271,7 +273,8 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(moveping, -0.6, 0.0);
+  glTranslatef(1.5, -0.6, moveping);
+  glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
 
@@ -293,7 +296,8 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(moveping, -0.6, 0.0);
+  glTranslatef(1.5, -0.6, moveping);
+  glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
 
@@ -319,6 +323,7 @@ void reshape(GLint w, GLint h) {
   }
 }
 
+/*
 void keyboard (unsigned char key, int x, int y){
   switch (key) {
   case 'z':
@@ -341,6 +346,31 @@ void keyboard (unsigned char key, int x, int y){
 	break;
   }
   glutPostRedisplay();
+}
+*/
+void keyboard(int key, int x, int y){
+  switch (key) {
+  // seta esquerda: mover para direcao 0 (?)
+  case GLUT_KEY_LEFT:
+	rotaping += 5.0;
+	break;
+  // seta direita: mover para direcao 1 (?)
+  case GLUT_KEY_RIGHT:
+	rotaping -= 5.0;
+	break;
+  // seta cima: mover para direcao 1 (para frente)
+  case GLUT_KEY_UP:
+	direcao = 1;
+	break;
+  // seta beixo: mover para direcao 0 (para tras)
+  case GLUT_KEY_DOWN:
+	direcao = 0;
+	break;
+  // padrao: mover para direcao 2 (?)
+  default:
+    direcao = 2;
+    break;
+  }
 }
 
 
@@ -387,10 +417,6 @@ void move(int passo)
 }
 
 
-
-
-
-
 // The usual application statup code.
 int main(int argc, char** argv)
 {
@@ -405,7 +431,11 @@ int main(int argc, char** argv)
   // movimentacao do pinguim
   glutTimerFunc(10,move,1);
 
-  glutKeyboardFunc(keyboard);
+  // glutKeyboardFunc(keyboard);
+
+  // Funcao especial do GLUT para teclas de setas
+  glutSpecialFunc(keyboard);
+
   init();
   glutMainLoop();
 }
