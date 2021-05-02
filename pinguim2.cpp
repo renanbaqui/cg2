@@ -15,9 +15,14 @@
 #include <iostream> 	// biblioteca auxiliar para numeros aleatorios
 #include <random>		// biblioteca auxiliar para numeros aleatorios
 using namespace std;
+// tamanho da janela inicial
+GLint winWidth = 800, winHeight = 600;
+// variavel de testes no teclado
+GLfloat z = 1;
 
-GLint winWidth = 800, winHeight = 600; //Initial display-window size.
-GLfloat z = 0.0;
+GLfloat moveping = 1.5;
+
+GLint direcao = 2;
 
 
 const double PI = 3.1415926535898;
@@ -226,12 +231,12 @@ void display() {
   glMatrixMode(GL_MODELVIEW); // Para operar na matriz de visualização de modelo
   glLoadIdentity();
 
-  //glRotatef(-20.0, 1.0, 0.0, 0.0); // Gira a cena para que possamos ver o topo das formas.
+  // glRotatef(-20.0, 1.0, 0.0, 0.0); // Gira a cena para que possamos ver o topo das formas.
   // Desenha o gelo
-  //top left corner
+  // canto superior esquerdo
   glViewport(0, winHeight/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(1, 2, 1, 1, 1, 0, 0, 1, 0); // janela em que a câmera está “posicionada” acima da cena, no eixo Y;
+  gluLookAt(1, 6.3, 1, 1, 1, 0, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
 
 
   glPushMatrix();
@@ -245,13 +250,14 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.5, -0.6, 0.0);
+  glTranslatef(moveping, -0.6, 0.0);
   pinguim();
   glPopMatrix();
 
-  //bottom left corner
+  // canto inferior esquerdo
   glViewport(0, 0, winWidth/2, winHeight/2);
-  gluLookAt(1, 0, 1, 1, 1, 0, 0, 1, 0); // janela em que a câmera está “posicionada” de frente para a cena, no eixo Z
+  glLoadIdentity();
+  gluLookAt(1, 1, 1, 1, 1, 0, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
 
 
   glPushMatrix();
@@ -265,31 +271,31 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.5, -0.6, 0.0);
+  glTranslatef(moveping, -0.6, 0.0);
   pinguim();
   glPopMatrix();
 
 
-	//top right corner
-	glViewport(winWidth/2, winWidth/2, winWidth/2, winHeight/2);
-	glLoadIdentity();
-	gluLookAt(-1, 1, 1, 1, 1, 0, 0, 1, 0); //  janela em que a câmera está “posicionada” do lado da cena, no eixo X;
+  // canto superior direito
+  glViewport(winWidth/2, winWidth/2, winWidth/2, winHeight/2);
+  glLoadIdentity();
+  gluLookAt(10, 1, 1, 1, 1, 0, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
 
 
-	glPushMatrix();
-	glTranslatef(0.0, -1.5, 0.0);
-	gelo();
-	glPopMatrix();
+  glPushMatrix();
+  glTranslatef(0.0, -1.5, 0.0);
+  gelo();
+  glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(0.0, -0.9, 0.0);
-	filhote();
-	glPopMatrix();
+  glPushMatrix();
+  glTranslatef(0.0, -0.9, 0.0);
+  filhote();
+  glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(1.5, -0.6, 0.0);
-	pinguim();
-	glPopMatrix();
+  glPushMatrix();
+  glTranslatef(moveping, -0.6, 0.0);
+  pinguim();
+  glPopMatrix();
 
 
   glutSwapBuffers();
@@ -324,6 +330,15 @@ void keyboard (unsigned char key, int x, int y){
     z -= 0.1;
     cout << "z: "<<z<<endl;
     break;
+
+  // seta esquerda: mover para direcao 0 (esquerda)
+  case 'a':
+	direcao = 0;
+	break;
+  // seta direita: mover para direcao 1 (direita)
+  case 'd':
+	direcao = 1;
+	break;
   }
   glutPostRedisplay();
 }
@@ -341,6 +356,41 @@ void init()
   glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Boas correções de perspectiva
 }
 
+// move = funcao de movimentacao do pinguim
+void move(int passo)
+{
+	// condicao de direcao 1 (direita)
+	if(direcao==1)
+	{
+		// movimentacao de x do pinguim
+		moveping += (float)passo/70;
+		// desenho do pinguim na direcao do movimento
+	/*	escalaping = 0.4;
+		// limite direito de movimento
+		if(moveping>0.2){
+			moveping -= (float)passo/70;
+		}*/
+	}
+	// condicao de direcao 0 (esquerda)
+	if(direcao==0)
+	{
+		// movimentacao de x do pinguim
+		moveping -= (float)passo/70;
+		// desenho do pinguim na direcao do movimento
+	/*	escalaping = -0.4;
+		// limite esquerdo de movimento
+		if(moveping<-4.5)
+			direcao = 1;*/
+	}
+	glutPostRedisplay();
+	glutTimerFunc(10,move,1);
+}
+
+
+
+
+
+
 // The usual application statup code.
 int main(int argc, char** argv)
 {
@@ -351,6 +401,10 @@ int main(int argc, char** argv)
   glutCreateWindow("Trabalho 2");
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);
+
+  // movimentacao do pinguim
+  glutTimerFunc(10,move,1);
+
   glutKeyboardFunc(keyboard);
   init();
   glutMainLoop();
