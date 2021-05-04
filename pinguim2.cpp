@@ -32,6 +32,8 @@ GLfloat p1x, p1y;
 
 // tempoConta = contador de tempo total do jogo (5 minutos)
 GLint tempoConta = 18000;
+// tempoFilhote = contador de tempo de vida do filhote (1 minuto)
+GLint tempoFilhote = 3600;
 // tempoBuraco = contador de tempo de aparecimento de novo buraco (10 segundos)
 GLint tempoBuraco = 250;
 
@@ -471,6 +473,37 @@ void moveBuraco(int passo)
 	glutTimerFunc(10,moveBuraco,1);
 }
 
+void tempoJogo(int passo){
+
+	tempoConta -= 1;
+	//tempoFilhote -= 1;
+    // condicao de termino do tempo de jogo
+	if(tempoConta<0){
+		// o pinguim e o petrel sao paralisados
+		moveping = -2.0;
+		rotaping = 0.0;
+//		movepetrel = 0.0;
+//		alturapetrel = 1.0;
+		// exibe o texto de final de jogo
+		//texto = 5.0;
+	}
+
+	/*
+	// condicao de termino do tempo de vida do filhote
+	else if(tempoFilhote<0){
+		// o pinguim e o petrel sao paralisados
+		moveping = -3.0;
+		movepetrel = 0.0;
+		alturapetrel = 1.0;
+		// exibe o texto "o filhote morreu" e "você perdeu"
+		texto2 = 4.0;
+		texto4 = 3.0;
+	}*/
+
+	glutPostRedisplay();
+	glutTimerFunc(10,tempoJogo,1);
+}
+
 
 // The usual application statup code.
 int main(int argc, char** argv)
@@ -494,6 +527,7 @@ int main(int argc, char** argv)
   // movimentacao do pinguim
   glutTimerFunc(10,move,1);
   glutTimerFunc(10,moveBuraco,1);
+  glutTimerFunc(10,tempoJogo,1);
 
   // glutKeyboardFunc(keyboard);
 
