@@ -27,7 +27,7 @@ GLint direcao = 2;
 
 const double PI = 3.1415926535898;
 
-GLfloat p1x, p1y;
+GLfloat p1x, p1z;
 
 
 // tempoConta = contador de tempo total do jogo (5 minutos)
@@ -50,7 +50,7 @@ void init();
 void gera(){
 
 	p1x = distr(gen);
-	p1y = distr2(gen);
+	p1z = distr2(gen);
 }
 
 void gelo()
@@ -268,7 +268,7 @@ void display() {
   // canto superior esquerdo
   glViewport(0, winHeight/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(1, 6.3, 1, 1, 1, 0, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
+  gluLookAt(0, 6.3, 0, 1.5, -0.6, moveping, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
 
 
   glPushMatrix();
@@ -288,18 +288,16 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(p1x, -0.9, p1y);
+  glTranslatef(p1x, -1, p1z);
   glRotatef(90, 1.0, 0.0, 0.0);
   buraco();
   glPopMatrix();
 
 
-
-
   // canto inferior esquerdo
   glViewport(0, 0, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(1, 1, 1, 1, 1, 0, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
+  gluLookAt(1, 0.5, 7, 1.5, -0.6, moveping, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
 
 
   glPushMatrix();
@@ -316,13 +314,19 @@ void display() {
   glTranslatef(1.5, -0.6, moveping);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p1x, -1, p1z);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  buraco();
   glPopMatrix();
 
 
   // canto superior direito
   glViewport(winWidth/2, winWidth/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(10, 1, 1, 1, 1, 0, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
+  gluLookAt(7, 0.5, 0, 1.5, -0.6, moveping, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
 
 
   glPushMatrix();
@@ -342,7 +346,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(0.0, -0.9, 0.0);
+  glTranslatef(p1x, -1, p1z);
   glRotatef(90, 1.0, 0.0, 0.0);
   buraco();
   glPopMatrix();
@@ -537,3 +541,4 @@ int main(int argc, char** argv)
   init();
   glutMainLoop();
 }
+
