@@ -15,6 +15,7 @@
 #include <iostream> 	// biblioteca auxiliar para numeros aleatorios
 #include <random>		// biblioteca auxiliar para numeros aleatorios
 using namespace std;
+
 // tamanho da janela inicial
 GLint winWidth = 800, winHeight = 600;
 // variavel de testes no teclado
@@ -24,10 +25,32 @@ GLfloat moveping = 0.0, rotaping = 0.0;
 
 GLint direcao = 2;
 
-
-
 const double PI = 3.1415926535898;
+
+GLfloat p1x, p1y;
+
+
+// tempoConta = contador de tempo total do jogo (5 minutos)
+GLint tempoConta = 18000;
+// tempoBuraco = contador de tempo de aparecimento de novo buraco (10 segundos)
+GLint tempoBuraco = 250;
+
+// obtem um numero aleatorio do hardware
+std::random_device rd;
+// alimenta o gerador de numeros
+std::mt19937 gen(rd());
+
+std::uniform_real_distribution<> distr(-2.5, 2.5); 		// funcao que define a variacao de p1x
+std::uniform_real_distribution<> distr2(-2.5, 2.5); 	// funcao que define a variacao de p1y
+
 void init();
+
+void gera(){
+
+	p1x = distr(gen);
+	p1y = distr2(gen);
+}
+
 void gelo()
 {
 	glColor3f(0.5, 0.5, 0.5);
@@ -227,6 +250,12 @@ void pinguimcompeixe()
 
 }
 
+void buraco()
+{
+	glColor3f(0.0, 0.0, 0.0);
+	circulo(0.5);
+}
+
 void display() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Limpar buffers de cor e profundidade
   glMatrixMode(GL_MODELVIEW); // Para operar na matriz de visualização de modelo
@@ -246,7 +275,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(0.0, -0.9, 0.0);
+  glTranslatef(0.0, -0.9, 0.0);	// filhote posicionado no centro da placa de gelo
   filhote();
   glPopMatrix();
 
@@ -255,6 +284,15 @@ void display() {
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p1x, -0.9, p1y);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  buraco();
+  glPopMatrix();
+
+
+
 
   // canto inferior esquerdo
   glViewport(0, 0, winWidth/2, winHeight/2);
@@ -268,7 +306,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(0.0, -0.9, 0.0);
+  glTranslatef(0.0, -0.9, 0.0);	// filhote posicionado no centro da placa de gelo
   filhote();
   glPopMatrix();
 
@@ -291,7 +329,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(0.0, -0.9, 0.0);
+  glTranslatef(0.0, -0.9, 0.0);	// filhote posicionado no centro da placa de gelo
   filhote();
   glPopMatrix();
 
@@ -299,6 +337,12 @@ void display() {
   glTranslatef(1.5, -0.6, moveping);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0.0, -0.9, 0.0);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  buraco();
   glPopMatrix();
 
 
@@ -330,12 +374,10 @@ void keyboard (unsigned char key, int x, int y){
     z += 0.1;
     cout << "z: "<<z<<endl;
     break;
-
   case 'Z':
     z -= 0.1;
     cout << "z: "<<z<<endl;
     break;
-
   // seta esquerda: mover para direcao 0 (esquerda)
   case 'a':
 	direcao = 0;
@@ -416,10 +458,31 @@ void move(int passo)
 	glutTimerFunc(10,move,1);
 }
 
+void moveBuraco(int passo)
+{
+	tempoBuraco -= 1;
+	if(tempoBuraco<0)
+	{
+		tempoBuraco += 250;
+		gera();
+	}
+
+	glutPostRedisplay();
+	glutTimerFunc(10,moveBuraco,1);
+}
+
 
 // The usual application statup code.
 int main(int argc, char** argv)
 {
+  // funcoes necessarias para os numeros aleatorios
+  std::random_device rd; 	// obtem um numero aleatorio do hardware
+  std::mt19937 gen(rd()); 	// alimenta o gerador de numeros
+
+  // gera = funcao de geracao de numeros aleatorios
+  gera();
+
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(80, 80);
@@ -430,6 +493,7 @@ int main(int argc, char** argv)
 
   // movimentacao do pinguim
   glutTimerFunc(10,move,1);
+  glutTimerFunc(10,moveBuraco,1);
 
   // glutKeyboardFunc(keyboard);
 
@@ -439,4 +503,3 @@ int main(int argc, char** argv)
   init();
   glutMainLoop();
 }
-
