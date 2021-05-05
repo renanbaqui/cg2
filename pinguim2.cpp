@@ -19,15 +19,14 @@ using namespace std;
 // tamanho da janela inicial
 GLint winWidth = 800, winHeight = 600;
 // variavel de testes no teclado
-GLfloat z = 1;
-
+GLfloat z = 0;
+// variaveis de posicao e direcao do pinguim
 GLfloat moveping = 0.0, rotaping = 0.0;
-
 GLint direcao = 2;
-
+// constante Pi
 const double PI = 3.1415926535898;
-
-GLfloat p1x, p1z;
+// coordenadas dos pontos aleatorios
+GLfloat p1x, p1z, p2x, p2z;
 
 
 // tempoConta = contador de tempo total do jogo (5 minutos)
@@ -36,6 +35,8 @@ GLint tempoConta = 18000;
 GLint tempoFilhote = 3600;
 // tempoBuraco = contador de tempo de aparecimento de novo buraco (10 segundos)
 GLint tempoBuraco = 250;
+// tempoBuraco = contador de tempo de aparecimento de novo peixe (20 segundos)
+GLint tempoPeixe = 500;
 
 // obtem um numero aleatorio do hardware
 std::random_device rd;
@@ -43,14 +44,21 @@ std::random_device rd;
 std::mt19937 gen(rd());
 
 std::uniform_real_distribution<> distr(-2.5, 2.5); 		// funcao que define a variacao de p1x
-std::uniform_real_distribution<> distr2(-2.5, 2.5); 	// funcao que define a variacao de p1y
+std::uniform_real_distribution<> distr2(-2.5, 2.5); 	// funcao que define a variacao de p1z
+std::uniform_real_distribution<> distr3(-2.5, 2.5); 	// funcao que define a variacao de p2x
+std::uniform_real_distribution<> distr4(-2.5, 2.5); 	// funcao que define a variacao de p2z
 
 void init();
 
+// gera ponto x,y para buraco
 void gera(){
-
 	p1x = distr(gen);
 	p1z = distr2(gen);
+}
+// gera ponto x,y para peixe
+void gera2(){
+	p2x = distr3(gen);
+	p2z = distr4(gen);
 }
 
 void gelo()
@@ -151,7 +159,7 @@ void corpo()
 	glPopMatrix();
 	// pe' esquerdo
 	glPushMatrix();
-	glColor3f(1.0, 1.0, 0.0);
+	glColor3f(0.98, 0.63, 0.01);	// cor laranja
 	glTranslatef(0.3, -1.17, 0.0);
 	semiesfera(24, 24, 0.25);
 	glPopMatrix();
@@ -215,7 +223,7 @@ void face()
 	glPopMatrix();
 	// nariz
 	glPushMatrix();
-	glColor3f(1.0, 1.0, 0.0);
+	glColor3f(0.98, 0.63, 0.01);
 	glTranslatef(0.0, 0.6, -1.4);
 	glRotatef(45.0, 1.0, 0.0, 0.0);
 	glutSolidCone(0.10, 0.40, 30, 30);
@@ -244,18 +252,57 @@ void filhote()
 
 void peixe()
 {
+	// corpo do peixe
+	glColor3f(0.0, 0.0, 1.0);
+	glPushMatrix();
+	glTranslatef(0.0, 0.25, 0.0);
+	glScalef(1.0, 1.9, 1.0);
+	glutSolidSphere(0.10, 30, 30);
+	glPopMatrix();
+	// rabo do peixe
+	glColor3f(1.0, 1.0, 0.0);
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, 0.0);
+	glScalef(1.0, 1.0, 1.0);
+	glRotatef(-90.0, 1.0, 0.0, 0.0);
+	glutSolidCone(0.08, 0.20, 30, 30);
+	glPopMatrix();
 
+	/*
+	// globo ocular direito
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glTranslatef(-0.6, 9.7, -1.5);
+	glScalef(0.042, 0.056, 0.042);
+	glutSolidSphere(1.0, 30, 30);
+	glPopMatrix();
+	// globo ocular esquerdo
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glTranslatef(-0.7, 9.7, -1.5);
+	glScalef(0.042, 0.056, 0.042);
+	glutSolidSphere(1.0, 30, 30);
+	glPopMatrix();
+	*/
 }
 
 void pinguimcompeixe()
 {
-
+	glPushMatrix();
+	pinguim();
+	glPopMatrix();
+	glPushMatrix();
+	glTranslatef(0.0, 0.0, 0.43);
+	glScalef(0.5, 0.5, 0.5);
+	glRotatef(0.0, 0.0, 0.0, 0.0);
+	peixe();
+	glPopMatrix();
 }
 
 void buraco()
 {
 	glColor3f(0.0, 0.0, 0.0);
-	circulo(0.5);
+	circulo(0.4);
 }
 
 void display() {
@@ -288,9 +335,15 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(p1x, -1, p1z);
+  glTranslatef(p1x, -1.1, p1z);
   glRotatef(90, 1.0, 0.0, 0.0);
   buraco();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p2x, -1.1, p2z);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  peixe();
   glPopMatrix();
 
 
@@ -317,10 +370,17 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(p1x, -1, p1z);
+  glTranslatef(p1x, -1.1, p1z);
   glRotatef(90, 1.0, 0.0, 0.0);
   buraco();
   glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p2x, -1.1, p2z);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  peixe();
+  glPopMatrix();
+
 
 
   // canto superior direito
@@ -346,9 +406,15 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(p1x, -1, p1z);
+  glTranslatef(p1x, -1.1, p1z);
   glRotatef(90, 1.0, 0.0, 0.0);
   buraco();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p2x, -1.1, p2z);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  peixe();
   glPopMatrix();
 
 
@@ -373,7 +439,7 @@ void reshape(GLint w, GLint h) {
   }
 }
 
-/*
+
 void keyboard (unsigned char key, int x, int y){
   switch (key) {
   case 'z':
@@ -384,18 +450,10 @@ void keyboard (unsigned char key, int x, int y){
     z -= 0.1;
     cout << "z: "<<z<<endl;
     break;
-  // seta esquerda: mover para direcao 0 (esquerda)
-  case 'a':
-	direcao = 0;
-	break;
-  // seta direita: mover para direcao 1 (direita)
-  case 'd':
-	direcao = 1;
-	break;
   }
   glutPostRedisplay();
 }
-*/
+
 void keyboard(int key, int x, int y){
   switch (key) {
   // seta esquerda: mover para direcao 0 (?)
@@ -424,14 +482,14 @@ void keyboard(int key, int x, int y){
 
 void init()
 {
-  glClearColor(0.592, 0.807, 0.921, 1.0); // Define a cor de background da janela
-  glClearDepth (1.0f);         // Define a profundidade do fundo para o mais distante
+  glClearColor(0.592, 0.807, 0.921, 1.0); // Define a cor de background da janela / cor do ce'u
+  glClearDepth (1.0f);         	// Define a profundidade do fundo para o mais distante
   //glMatrixMode(GL_PROJECTION);
   //glLoadIdentity();
-  glEnable (GL_DEPTH_TEST);   // Habilita o teste de profundidade para z-abate
-  glDepthFunc (GL_LEQUAL);    // Defina o tipo de teste de profundidade
-  glShadeModel (GL_SMOOTH);   // Habilita sombreamento suave
-  glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);  // Boas correções de perspectiva
+  glEnable (GL_DEPTH_TEST); 	// Habilita o teste de profundidade para z-abate
+  glDepthFunc (GL_LEQUAL);    	// Defina o tipo de teste de profundidade
+  glShadeModel (GL_SMOOTH);   	// Habilita sombreamento suave
+  glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Boas correções de perspectiva
 }
 
 // move = funcao de movimentacao do pinguim
@@ -477,6 +535,19 @@ void moveBuraco(int passo)
 	glutTimerFunc(10,moveBuraco,1);
 }
 
+void movePeixe(int passo)
+{
+	tempoPeixe -= 1;
+	if(tempoPeixe<0)
+	{
+		tempoPeixe += 500;
+		gera2();
+	}
+
+	glutPostRedisplay();
+	glutTimerFunc(10,movePeixe,1);
+}
+
 void tempoJogo(int passo){
 
 	tempoConta -= 1;
@@ -516,9 +587,9 @@ int main(int argc, char** argv)
   std::random_device rd; 	// obtem um numero aleatorio do hardware
   std::mt19937 gen(rd()); 	// alimenta o gerador de numeros
 
-  // gera = funcao de geracao de numeros aleatorios
+  // funcoes de geracao de numeros aleatorios
   gera();
-
+  gera2();
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -530,10 +601,12 @@ int main(int argc, char** argv)
 
   // movimentacao do pinguim
   glutTimerFunc(10,move,1);
+
   glutTimerFunc(10,moveBuraco,1);
+  glutTimerFunc(10,movePeixe,1);
   glutTimerFunc(10,tempoJogo,1);
 
-  // glutKeyboardFunc(keyboard);
+  glutKeyboardFunc(keyboard);
 
   // Funcao especial do GLUT para teclas de setas
   glutSpecialFunc(keyboard);
@@ -541,4 +614,3 @@ int main(int argc, char** argv)
   init();
   glutMainLoop();
 }
-
