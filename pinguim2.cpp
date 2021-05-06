@@ -21,7 +21,7 @@ GLint winWidth = 800, winHeight = 600;
 // variavel de testes no teclado
 GLfloat z = 0;
 // variaveis de posicao e direcao do pinguim
-GLfloat moveping = 0.0, rotaping = 0.0;
+GLfloat movePingZ = 0.0, rotaping = 0.0;
 GLint direcao = 2;
 // constante Pi
 const double PI = 3.1415926535898;
@@ -315,7 +315,7 @@ void display() {
   // canto superior esquerdo
   glViewport(0, winHeight/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(0, 6.3, 0, 1.5, -0.6, moveping, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
+  gluLookAt(0, 6.3, 0, 1.5, -0.6, movePingZ, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
 
 
   glPushMatrix();
@@ -329,7 +329,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.5, -0.6, moveping);
+  glTranslatef(1.5, -0.6, movePingZ);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
@@ -350,7 +350,7 @@ void display() {
   // canto inferior esquerdo
   glViewport(0, 0, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(1, 0.5, 7, 1.5, -0.6, moveping, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
+  gluLookAt(1, 0.5, 7, 1.5, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
 
 
   glPushMatrix();
@@ -364,7 +364,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.5, -0.6, moveping);
+  glTranslatef(1.5, -0.6, movePingZ);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
@@ -386,7 +386,7 @@ void display() {
   // canto superior direito
   glViewport(winWidth/2, winWidth/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(7, 0.5, 0, 1.5, -0.6, moveping, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
+  gluLookAt(7, 0.5, 0, 1.5, -0.6, movePingZ, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
 
 
   glPushMatrix();
@@ -400,7 +400,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.5, -0.6, moveping);
+  glTranslatef(1.5, -0.6, movePingZ);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
@@ -439,7 +439,7 @@ void reshape(GLint w, GLint h) {
   }
 }
 
-
+// funcao de testes com o teclado
 void keyboard (unsigned char key, int x, int y){
   switch (key) {
   case 'z':
@@ -454,6 +454,7 @@ void keyboard (unsigned char key, int x, int y){
   glutPostRedisplay();
 }
 
+// teclas especiais do teclado
 void keyboard(int key, int x, int y){
   switch (key) {
   // seta esquerda: mover para direcao 0 (?)
@@ -499,7 +500,7 @@ void move(int passo)
 	if(direcao==1)
 	{
 		// movimentacao de x do pinguim
-		moveping += (float)passo/70;
+		movePingZ += (float)passo/70;
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = 0.4;
 		// limite direito de movimento
@@ -511,13 +512,23 @@ void move(int passo)
 	if(direcao==0)
 	{
 		// movimentacao de x do pinguim
-		moveping -= (float)passo/70;
+		movePingZ -= (float)passo/70;
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = -0.4;
 		// limite esquerdo de movimento
 		if(moveping<-4.5)
 			direcao = 1;*/
 	}
+
+
+    // condicao de colisao com o buraco  (funciona mas nao utilizado pois falta implementar 'movePingX')
+	/*
+	if ((movePingX <= p1x + 0.35) && (movePingZ <= p1z + 0.35)){
+		// em caso de colisao, encerra o tempo e insere texto
+		tempoConta = -10;
+		//texto4 = 3.0;
+	}*/
+
 	glutPostRedisplay();
 	glutTimerFunc(10,move,1);
 }
@@ -554,8 +565,8 @@ void tempoJogo(int passo){
 	//tempoFilhote -= 1;
     // condicao de termino do tempo de jogo
 	if(tempoConta<0){
-		// o pinguim e o petrel sao paralisados
-		moveping = -2.0;
+		// o pinguim e' movido para um ponto fixo e paralisado
+		movePingZ = -2.0;
 		rotaping = 0.0;
 //		movepetrel = 0.0;
 //		alturapetrel = 1.0;
