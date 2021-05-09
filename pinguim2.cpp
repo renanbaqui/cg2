@@ -21,8 +21,9 @@ GLint winWidth = 800, winHeight = 600;
 // variavel de testes no teclado
 GLfloat z = 0;
 // variaveis de posicao e direcao do pinguim
-GLfloat movePingZ = 0.0, rotaping = 0.0;
-GLint direcao = 2;
+GLfloat movePingZ = 0.0, rotaping = 0.0, rotaNadadeira = 90.0;
+GLint direcao = 2, nadadeiras = 0;
+
 // constante Pi
 const double PI = 3.1415926535898;
 // coordenadas dos pontos aleatorios
@@ -171,15 +172,15 @@ void corpo()
 	// nadadeira esquerda
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
-	glTranslatef(0.9, 0.0, -0.5);
-	glRotatef(-35.0, 1.0, 1.0, 0.0);
+	glTranslatef(0.8, 0.0, 0.0);
+	glRotatef(rotaNadadeira, 1.0, 0.0, 0.0); //glRotatef(rotaNadadeira, 1.0, 0.0, 0.0);
 	glutSolidCone(0.10, 0.80, 30, 30);
 	glPopMatrix();
 	// nadadeira direita
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
-	glTranslatef(-0.9, 0.0, 0.5);
-	glRotatef(145.0, -1.0, 1.0, 0.0);
+	glTranslatef(-0.8, 0.0, 0.0);
+	glRotatef(rotaNadadeira, 1.0, 0.0, 0.0);
 	glutSolidCone(0.10, 0.80, 30, 30);
 	glPopMatrix();
 }
@@ -501,14 +502,17 @@ void keyboard(int key, int x, int y){
   // seta cima: mover para direcao 1 (para frente)
   case GLUT_KEY_UP:
 	direcao = 1;
+	nadadeiras = 1;
 	break;
   // seta beixo: mover para direcao 0 (para tras)
   case GLUT_KEY_DOWN:
 	direcao = 0;
+	nadadeiras = 1;
 	break;
-  // padrao: mover para direcao 2 (?)
+  // padrao: mover para direcao 2 (parado)
   default:
     direcao = 2;
+    nadadeiras = 0;
     break;
   }
 }
@@ -529,11 +533,12 @@ void init()
 // move = funcao de movimentacao do pinguim
 void move(int passo)
 {
-	// condicao de direcao 1 (direita)
+	// condicao de direcao 1 (frente)
 	if(direcao==1)
 	{
 		// movimentacao de x do pinguim
 		movePingZ += (float)passo/70;
+
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = 0.4;
 		// limite direito de movimento
@@ -546,6 +551,7 @@ void move(int passo)
 	{
 		// movimentacao de x do pinguim
 		movePingZ -= (float)passo/70;
+
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = -0.4;
 		// limite esquerdo de movimento
@@ -553,6 +559,18 @@ void move(int passo)
 			direcao = 1;*/
 	}
 
+	if (nadadeiras==0){
+		rotaNadadeira = 90.0;
+	}
+
+	if (nadadeiras==1){
+		if (rotaNadadeira == 270.0){
+			rotaNadadeira = 90.0;
+		}
+		else if (rotaNadadeira == 90.0){
+			rotaNadadeira = 270.0;
+		}
+	}
 
     // condicao de colisao com o buraco  (funciona mas nao utilizado pois falta implementar 'movePingX')
 	/*
