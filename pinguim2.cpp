@@ -536,8 +536,15 @@ void move(int passo)
 	// condicao de direcao 1 (frente)
 	if(direcao==1)
 	{
+
+
 		// movimentacao de x do pinguim
 		movePingZ += (float)passo/70;
+
+		if((movePingZ<-2.9) || (movePingZ>2.9)) {
+			movePingZ -= (float)passo/70;
+		}
+
 
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = 0.4;
@@ -549,8 +556,14 @@ void move(int passo)
 	// condicao de direcao 0 (esquerda)
 	if(direcao==0)
 	{
+
 		// movimentacao de x do pinguim
 		movePingZ -= (float)passo/70;
+
+		if((movePingZ<-2.9) || (movePingZ>2.9)) {
+			movePingZ += (float)passo/70;
+		}
+
 
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = -0.4;
@@ -571,6 +584,8 @@ void move(int passo)
 			rotaNadadeira = 270.0;
 		}
 	}
+
+
 
     // condicao de colisao com o buraco  (funciona mas nao utilizado pois falta implementar 'movePingX')
 	/*
