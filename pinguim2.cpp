@@ -171,14 +171,14 @@ void corpo()
 	// nadadeira esquerda
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
-	glTranslatef(0.9, 0.0, -0.3);
+	glTranslatef(0.9, 0.0, -0.5);
 	glRotatef(-35.0, 1.0, 1.0, 0.0);
 	glutSolidCone(0.10, 0.80, 30, 30);
 	glPopMatrix();
 	// nadadeira direita
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
-	glTranslatef(-0.9, 0.0, 0.4);
+	glTranslatef(-0.9, 0.0, 0.5);
 	glRotatef(145.0, -1.0, 1.0, 0.0);
 	glutSolidCone(0.10, 0.80, 30, 30);
 	glPopMatrix();
@@ -286,7 +286,7 @@ void peixe()
 	*/
 }
 
-void pinguimcompeixe()
+void pinguimComPeixe()
 {
 	glPushMatrix();
 	pinguim();
@@ -417,6 +417,39 @@ void display() {
   peixe();
   glPopMatrix();
 
+  // canto inferior direito
+  glViewport(winWidth/2, 0, winWidth/2, winHeight/2);
+  glLoadIdentity();
+  gluLookAt(3.0, 4.0, 5.0, 1.5, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” em uma posicao livre
+
+
+  glPushMatrix();
+  glTranslatef(0.0, -1.5, 0.0);
+  gelo();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(0.0, -0.9, 0.0);	// filhote posicionado no centro da placa de gelo
+  filhote();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(1.5, -0.6, movePingZ);
+  glRotatef(rotaping, 0.0, 1.0, 0.0);
+  pinguim();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p1x, -1.1, p1z);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  buraco();
+  glPopMatrix();
+
+  glPushMatrix();
+  glTranslatef(p2x, -1.1, p2z);
+  glRotatef(90, 1.0, 0.0, 0.0);
+  peixe();
+  glPopMatrix();
 
   glutSwapBuffers();
 }
