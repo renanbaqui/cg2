@@ -35,13 +35,13 @@ GLint winWidth = 800, winHeight = 600;
 // variavel de testes no teclado
 GLfloat z = 0;
 // variaveis de posicao e direcao do pinguim
-GLfloat movePingX = 0.0, movePingZ = -1.0, rotaping = 0.0, rotaNadadeira = 90.0;
+GLfloat movePingX = 0.0, movePingZ = 0.0, rotaping = 0.0, rotaNadadeira = 90.0;
 GLint direcao = 2, nadadeiras = 0;
 
 // constante Pi
 const double PI = 3.1415926535898;
 // coordenadas dos pontos aleatorios
-GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
+GLfloat p1x, p1z, p2x, p2z;
 
 GLfloat vetor[2]= {0,0}, vetorD[2]={0,0};
 
@@ -333,15 +333,22 @@ void esferaPeixe(){
 
 void peixe()
 {
+	 glEnable(GL_TEXTURE_2D);
+	 glBindTexture( GL_TEXTURE_2D, texID[0] );
 	// corpo do peixe
-	glColor3f(0.0, 0.0, 1.0);
+	//glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
 	glTranslatef(0.0, 0.25, 0.0);
 	glScalef(1.0, 1.9, 1.0);
-	glutSolidSphere(0.10, 30, 30);
+	GLUquadricObj *sphere=NULL;
+	sphere = gluNewQuadric();
+	gluQuadricDrawStyle(sphere, GLU_FILL);
+	gluQuadricTexture(sphere, TRUE);
+	gluQuadricNormals(sphere, GLU_SMOOTH);
+
 	glPopMatrix();
 	// rabo do peixe
-	glColor3f(1.0, 1.0, 0.0);
+	//glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
 	glTranslatef(0.0, 0.0, 0.0);
 	glScalef(1.0, 1.0, 1.0);
@@ -430,17 +437,17 @@ void display() {
   glRotatef(90, 1.0, 0.0, 0.0);
   peixe();
   glPopMatrix();
-  /*
+
   glPushMatrix();
   glTranslatef(0.0, 0.0, 0.0);
   esferaPeixe();
   glPopMatrix();
-  */
+
 
   // canto inferior esquerdo
   glViewport(0, 0, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(1, 0.5, 7, movePingX, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
+  gluLookAt(1, 0.5, 7, 1.5, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
 
 
   glPushMatrix();
@@ -454,7 +461,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(movePingX, -0.6, movePingZ);
+  glTranslatef(1.5, -0.6, movePingZ);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
@@ -477,13 +484,16 @@ void display() {
   DesenhaCenario();
   glPopMatrix();
 
-
+  glPushMatrix();
+  glTranslatef(0.0, 0.0, 0.0);
+  esferaPeixe();
+  glPopMatrix();
 
 
   // canto superior direito
   glViewport(winWidth/2, winWidth/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(7, 0.5, 0, movePingX, -0.6, movePingZ, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
+  gluLookAt(7, 0.5, 0, 1.5, -0.6, movePingZ, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
 
 
   glPushMatrix();
@@ -497,7 +507,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(movePingX, -0.6, movePingZ);
+  glTranslatef(1.5, -0.6, movePingZ);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
@@ -520,13 +530,16 @@ void display() {
   DesenhaCenario();
   glPopMatrix();
 
-
+  glPushMatrix();
+  glTranslatef(0.0, 0.0, 0.0);
+  esferaPeixe();
+  glPopMatrix();
 
 
   // canto inferior direito
   glViewport(winWidth/2, 0, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(3.0, 4.0, 5.0, movePingX, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” em uma posicao livre
+  gluLookAt(3.0, 4.0, 5.0, 1.5, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” em uma posicao livre
 
 
   glPushMatrix();
@@ -540,7 +553,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(movePingX, -0.6, movePingZ);
+  glTranslatef(1.5, -0.6, movePingZ);
   glRotatef(rotaping, 0.0, 1.0, 0.0);
   pinguim();
   glPopMatrix();
@@ -557,7 +570,10 @@ void display() {
   peixe();
   glPopMatrix();
 
-
+  glPushMatrix();
+  glTranslatef(0.0, 0.0, 0.0);
+  esferaPeixe();
+  glPopMatrix();
 
 
   glutSwapBuffers();	// (required for double-buffered drawing)
@@ -607,7 +623,7 @@ void keyboard(int key, int x, int y){
 	vetor[1] = sin(-(rotaping + 270)*PI/180);
 	vetorD[0] = vetor[0]*movePingX - vetor[1]*movePingZ;
 	vetorD[1] = vetor[1]*movePingX + vetor[0]*movePingZ;
-	nadadeiras = 0;
+
 	break;
   // seta direita: rotacionar o pinguim em torno do seu eixo para a direita
   case GLUT_KEY_RIGHT:
@@ -617,7 +633,6 @@ void keyboard(int key, int x, int y){
 	vetor[1] = sin(-(rotaping + 270)*PI/180);
 	vetorD[0] = vetor[0]*movePingX - vetor[1]*movePingZ;
 	vetorD[1] = vetor[1]*movePingX + vetor[0]*movePingZ;
-	nadadeiras = 0;
 	break;
   // seta cima: mover para direcao 1 (para frente)
   case GLUT_KEY_UP:
@@ -655,15 +670,17 @@ void initGL()
 // move = funcao de movimentacao do pinguim
 void move(int passo)
 {
-	// limite de movimento do pinguim em Z
-	if((movePingZ<-2.9) || (movePingZ>2.9)) {
-		movePingZ -= (float)passo/70;
-	}
+	// condicao de direcao 1 (frente)
+	if(direcao==1)
+	{
 
-	// limite de movimento do pinguim em Z
-	if((movePingZ<-2.9) || (movePingZ>2.9)) {
+		// movimentacao em Z do pinguim
 		movePingZ += (float)passo/70;
-	}
+
+		// limite de movimento do pinguim em Z
+		if((movePingZ<-2.9) || (movePingZ>2.9)) {
+			movePingZ -= (float)passo/70;
+		}
 
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = 0.4;
@@ -671,6 +688,27 @@ void move(int passo)
 		if(moveping>0.2){
 			moveping -= (float)passo/70;
 		}*/
+	}
+	// condicao de direcao 0 (tras)
+	if(direcao==0)
+	{
+
+		// movimentacao em Z do pinguim
+		movePingZ -= (float)passo/70;
+
+		// limite de movimento do pinguim em Z
+		if((movePingZ<-2.9) || (movePingZ>2.9)) {
+			movePingZ += (float)passo/70;
+		}
+
+
+		// desenho do pinguim na direcao do movimento
+	/*	escalaping = -0.4;
+		// limite esquerdo de movimento
+		if(moveping<-4.5)
+			direcao = 1;*/
+	}
+
 
 	// movimentacao das nadadeiras
 	// nadadeiras paradas
@@ -687,14 +725,13 @@ void move(int passo)
 		}
 	}
 
-    // condicao de colisao com o buraco
-
-	if ((movePingX <= p1x + 0.35) && (movePingX >= p1x - 0.35) && (movePingZ <= p1z + 0.35)&& (movePingZ >= p1z - 0.35)){
+    // condicao de colisao com o buraco  (funciona mas nao utilizado ainda pois falta implementar 'movePingX')
+	/*
+	if ((movePingX <= p1x + 0.35) && (movePingZ <= p1z + 0.35)){
 		// em caso de colisao, encerra o tempo e insere texto
 		tempoConta = -10;
-		nadadeiras = 0;
 		//texto4 = 3.0;
-	}
+	}*/
 
 	glutPostRedisplay();
 	glutTimerFunc(10,move,1);
@@ -735,7 +772,6 @@ void tempoJogo(int passo){
     // condicao de termino do tempo de jogo
 	if(tempoConta<0){
 		// o pinguim e' movido para um ponto fixo e paralisado
-		movePingX = 0.0;
 		movePingZ = -2.0;
 		rotaping = 0.0;
 //		movepetrel = 0.0;
@@ -810,6 +846,7 @@ int main(int argc, char** argv)
   std::mt19937 gen(rd()); 	// alimenta o gerador de numeros
 
   // funcoes de geracao de numeros aleatorios
+  gera();
   gera2();
 
   glutInit(&argc, argv);
