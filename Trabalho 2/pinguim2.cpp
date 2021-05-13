@@ -43,6 +43,9 @@ const double PI = 3.1415926535898;
 // coordenadas dos pontos aleatorios
 GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
 
+// pesc = booleana se o pinguim pescou o peixe
+bool pesc = false;
+
 GLfloat vetor[2]= {0,0}, vetorD[2]={0,0};
 
 
@@ -400,7 +403,7 @@ void display() {
   // canto superior esquerdo
   glViewport(0, winHeight/2, winWidth/2, winHeight/2);
   glLoadIdentity();
-  gluLookAt(0, 6.3, 0, 1.5, -0.6, movePingZ, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
+  gluLookAt(0, 6.3, 0, movePingX, -0.6, movePingZ, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
 
 
   glPushMatrix();
@@ -436,6 +439,32 @@ void display() {
   esferaPeixe();
   glPopMatrix();
   */
+
+  // condicao se o pinguim pescar o peixe desenhar o pinguim com peixe na boca
+  if (pesc==true)
+	{
+		// desenho do pinguim com peixe na boca
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguimComPeixe();
+		glPopMatrix();
+	}
+  	// condicao do pinguim alimentar o filhote e desenhar o pinguim sem peixe
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4)&& (movePingZ >= -0.4))
+	{
+		pesc = false;
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguim();
+		glPopMatrix();
+	}
+	// condicao do pinguim alimentar o filhote e aumentar o tempo
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
+		tempoFilhote += 3500;	// adiciona 1 minuto
+	}
+
 
   // canto inferior esquerdo
   glViewport(0, 0, winWidth/2, winHeight/2);
@@ -477,7 +506,30 @@ void display() {
   DesenhaCenario();
   glPopMatrix();
 
-
+  // condicao se o pinguim pescar o peixe desenhar o pinguim com peixe na boca
+  if (pesc==true)
+	{
+		// desenho do pinguim com peixe na boca
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguimComPeixe();
+		glPopMatrix();
+	}
+  	// condicao do pinguim alimentar o filhote e desenhar o pinguim sem peixe
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4)&& (movePingZ >= -0.4))
+	{
+		pesc = false;
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguim();
+		glPopMatrix();
+	}
+	// condicao do pinguim alimentar o filhote e aumentar o tempo
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
+		tempoFilhote += 3500;	// adiciona 1 minuto
+	}
 
 
   // canto superior direito
@@ -520,7 +572,30 @@ void display() {
   DesenhaCenario();
   glPopMatrix();
 
-
+  // condicao se o pinguim pescar o peixe desenhar o pinguim com peixe na boca
+  if (pesc==true)
+	{
+		// desenho do pinguim com peixe na boca
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguimComPeixe();
+		glPopMatrix();
+	}
+  	// condicao do pinguim alimentar o filhote e desenhar o pinguim sem peixe
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4)&& (movePingZ >= -0.4))
+	{
+		pesc = false;
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguim();
+		glPopMatrix();
+	}
+	// condicao do pinguim alimentar o filhote e aumentar o tempo
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
+		tempoFilhote += 3500;	// adiciona 1 minuto
+	}
 
 
   // canto inferior direito
@@ -557,7 +632,30 @@ void display() {
   peixe();
   glPopMatrix();
 
-
+  // condicao se o pinguim pescar o peixe desenhar o pinguim com peixe na boca
+  if (pesc==true)
+	{
+		// desenho do pinguim com peixe na boca
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguimComPeixe();
+		glPopMatrix();
+	}
+  	// condicao do pinguim alimentar o filhote e desenhar o pinguim sem peixe
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4)&& (movePingZ >= -0.4))
+	{
+		pesc = false;
+		glPushMatrix();
+		glTranslatef(movePingX, -0.6, movePingZ);
+		glRotatef(rotaping, 0.0, 1.0, 0.0);
+		pinguim();
+		glPopMatrix();
+	}
+	// condicao do pinguim alimentar o filhote e aumentar o tempo
+	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
+		tempoFilhote += 3500;	// adiciona 1 minuto
+	}
 
 
   glutSwapBuffers();	// (required for double-buffered drawing)
@@ -655,15 +753,15 @@ void initGL()
 // move = funcao de movimentacao do pinguim
 void move(int passo)
 {
-	// limite de movimento do pinguim em Z
-	if((movePingZ<-2.9) || (movePingZ>2.9)) {
+	// limite de movimento do pinguim em Z (nao funciona)
+	if(movePingZ<-2.9){
 		movePingZ -= (float)passo/70;
 	}
-
-	// limite de movimento do pinguim em Z
+	/*
+	// limite de movimento do pinguim em Z (nao funciona)
 	if((movePingZ<-2.9) || (movePingZ>2.9)) {
 		movePingZ += (float)passo/70;
-	}
+	}*/
 
 		// desenho do pinguim na direcao do movimento
 	/*	escalaping = 0.4;
@@ -688,11 +786,18 @@ void move(int passo)
 	}
 
     // condicao de colisao com o buraco
-
 	if ((movePingX <= p1x + 0.35) && (movePingX >= p1x - 0.35) && (movePingZ <= p1z + 0.35)&& (movePingZ >= p1z - 0.35)){
-		// em caso de colisao, encerra o tempo e insere texto
+		// em caso de colisao, encerra o tempo, para as nadadeiras e insere texto
 		tempoConta = -10;
 		nadadeiras = 0;
+		//texto4 = 3.0;
+	}
+
+	// condicao de colisao com o peixe // verificar se os limites estao adequados
+	if ((movePingX <= p2x + 0.35) && (movePingX >= p2x - 0.35) && (movePingZ <= p2z + 0.35)&& (movePingZ >= p2z - 0.35)){
+		// em caso de colisao, gera nova posicao para o peixe
+		pesc = true;
+		gera2(); // gera nova posicao peixe
 		//texto4 = 3.0;
 	}
 
