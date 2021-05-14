@@ -46,8 +46,10 @@ GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
 // pesc = booleana se o pinguim pescou o peixe
 bool pesc = false;
 
-GLfloat vetor[2]= {0,0}, vetorD[2]={0,0};
+GLfloat vetor[2]= {0,1}, vetorD[2]={0,0};
 
+// vetor[0] = cos(-(rotaping + 270)*PI/180);
+// vetor[1] = sin(-(rotaping + 270)*PI/180);
 
 // tempoConta = contador de tempo total do jogo (5 minutos)
 GLint tempoConta = 18000;
