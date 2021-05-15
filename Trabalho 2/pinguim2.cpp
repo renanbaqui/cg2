@@ -46,18 +46,21 @@ GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
 // pesc = booleana se o pinguim pescou o peixe
 bool pesc = false;
 
-GLfloat vetor[2]= {0,1}, vetorD[2]={0,0};
+GLfloat vetor[2]= {0,1}, vetorD[2]={0,0}; // vetores de movimentacao do pinguim pai
 
 // vetor[0] = cos(-(rotaping + 270)*PI/180);
 // vetor[1] = sin(-(rotaping + 270)*PI/180);
 
+// texto, texto2, texto3, texto4 = posicao do texto na tela (inicializado em 20.0 para ficar escondido)
+GLint texto = 20.0, texto2 = 20.0, texto3 = 20.0, texto4 = 20.0;
+
 // tempoConta = contador de tempo total do jogo (5 minutos)
-GLint tempoConta = 18000;
+GLint tempoConta = 5000;
 // tempoFilhote = contador de tempo de vida do filhote (1 minuto)
-GLint tempoFilhote = 3600;
-// tempoBuraco = contador de tempo de aparecimento de novo buraco (10 segundos)
+GLint tempoFilhote = 1000;
+// tempoBuraco = contador de tempo de aparecimento de novo buraco (15 segundos)
 GLint tempoBuraco = 250;
-// tempoBuraco = contador de tempo de aparecimento de novo peixe (20 segundos)
+// tempoBuraco = contador de tempo de aparecimento de novo peixe (30 segundos)
 GLint tempoPeixe = 500;
 
 // obtem um numero aleatorio do hardware
@@ -501,12 +504,33 @@ void display() {
   glRotatef(90, 1.0, 0.0, 0.0);
   peixe();
   glPopMatrix();
-
+  /*
   glPushMatrix();
   glTranslatef(1.4, 0.0, -2.60);
   glRotatef(180, 1.0, 0.0, 0.0);
   DesenhaCenario();
-  glPopMatrix();
+  glPopMatrix();*/
+
+  // mensagens de jogo somente na janela que esta' posicionada de 'frente' para a cena
+  // mensagem: fim de jogo
+  glColor4f(1.0, 0.0, 0.0, 0.0);
+  const unsigned char* t = reinterpret_cast<const unsigned char *>("FIM DE JOGO");
+  glRasterPos3i( 1, texto, 1 );
+  glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, t);
+
+  // mensagem: o filhote morreu
+  glColor4f(1.0, 0.0, 0.0, 0.0);
+  const unsigned char* u = reinterpret_cast<const unsigned char *>("O FILHOTE MORREU");
+  glRasterPos3i( 1, texto2, 1 );
+  glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, u);
+
+  // mensagem: você perdeu
+  glColor4f(1.0, 0.0, 0.0, 0.0);
+  const unsigned char* x = reinterpret_cast<const unsigned char *>("VOCÊ PERDEU");
+  glRasterPos3i( 1, texto4, 1 );
+  glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, x);
+
+
 
   // condicao se o pinguim pescar o peixe desenhar o pinguim com peixe na boca
   if (pesc==true)
@@ -656,7 +680,7 @@ void display() {
 	}
 	// condicao do pinguim alimentar o filhote e aumentar o tempo
 	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
-		tempoFilhote += 3500;	// adiciona 1 minuto
+		tempoFilhote += 3500;	// adiciona 1 minuto ao tempo para alimentar o pinguim filho
 	}
 
 
@@ -792,7 +816,7 @@ void move(int passo)
 		// em caso de colisao, encerra o tempo, para as nadadeiras e insere texto
 		tempoConta = -10;
 		nadadeiras = 0;
-		//texto4 = 3.0;
+		texto4 = 1;
 	}
 
 	// condicao de colisao com o peixe // verificar se os limites estao adequados
@@ -800,7 +824,6 @@ void move(int passo)
 		// em caso de colisao, gera nova posicao para o peixe
 		pesc = true;
 		gera2(); // gera nova posicao peixe
-		//texto4 = 3.0;
 	}
 
 	glutPostRedisplay();
@@ -837,31 +860,30 @@ void movePeixe(int passo)
 
 void tempoJogo(int passo){
 
-	tempoConta -= 1;
-	// tempoFilhote -= 1;
-    // condicao de termino do tempo de jogo
+	tempoConta -= 1;	// diminui o tempo total do jogo
+	tempoFilhote -= 1;	// diminui o tempo para alimentar o pinguim filho
+
+	// condicao de termino do tempo de jogo
 	if(tempoConta<0){
 		// o pinguim e' movido para um ponto fixo e paralisado
 		movePingX = 0.0;
 		movePingZ = -2.0;
 		rotaping = 0.0;
-//		movepetrel = 0.0;
-//		alturapetrel = 1.0;
+
 		// exibe o texto de final de jogo
-		//texto = 5.0;
+		texto = 2;
 	}
 
-	/*
 	// condicao de termino do tempo de vida do filhote
 	else if(tempoFilhote<0){
-		// o pinguim e o petrel sao paralisados
-		moveping = -3.0;
-		movepetrel = 0.0;
-		alturapetrel = 1.0;
+		// o pinguim e' movido para um ponto fixo e paralisado
+		movePingX = 0.0;
+		movePingZ = -2.0;
+		rotaping = 0.0;
 		// exibe o texto "o filhote morreu" e "você perdeu"
-		texto2 = 4.0;
-		texto4 = 3.0;
-	}*/
+		texto2 = 1;
+		texto4 = 2;
+	}
 
 	glutPostRedisplay();
 	glutTimerFunc(10,tempoJogo,1);
