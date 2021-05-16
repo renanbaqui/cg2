@@ -22,12 +22,12 @@ using namespace std;
 GLuint texID[6];	// IDs de textura para as cinco texturas
 
 char const* textureFileNames[6] = { 	// nomes de arquivo para os arquivos dos quais as imagens de textura sao carregadas
-            "texturas/container.jpg",
-            "texturas/paredegelo.jpg",
+        	"texturas/escama1.jpg",
+			"texturas/paredegelo.jpg",
 			"texturas/montahas.jpg",
 			"texturas/marble.jpg",
 			"texturas/derretimento.jpg",
-			"texturas/buraco.jpg"
+			"texturas/geloderrete.png"
        };
 
 // tamanho da janela inicial
@@ -322,18 +322,32 @@ void filhote()
 	glPopMatrix();
 }
 
-void esferaPeixe(){
-
+void esferaPeixe()
+{
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture( GL_TEXTURE_2D, texID[0] );
-	// Create the sphere
+	glBindTexture(GL_TEXTURE_2D, texID[0]);
 	glPushMatrix();
 	glRotatef(90.0, 1.0, 0.0, 0.0);
 	GLUquadric *quadric = gluNewQuadric();
 	gluQuadricDrawStyle(quadric, GLU_FILL);
 	gluQuadricNormals(quadric, GLU_SMOOTH);
 	gluQuadricTexture(quadric, GL_TRUE);
-	gluSphere(quadric, 1.0, 20, 20);
+	gluSphere(quadric, 0.10, 30, 30);
+	gluDeleteQuadric(quadric);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+}
+
+void conePeixe()
+{
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texID[0]);
+	glPushMatrix();
+	GLUquadric *quadric = gluNewQuadric();
+	gluQuadricDrawStyle(quadric, GLU_FILL);
+	gluQuadricNormals(quadric, GLU_SMOOTH);
+	gluQuadricTexture(quadric, GL_TRUE);
+	gluCylinder(quadric, 0.08, 0.0, 0.20, 30, 30);
 	gluDeleteQuadric(quadric);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -342,21 +356,20 @@ void esferaPeixe(){
 void peixe()
 {
 	// corpo do peixe
-	glColor3f(0.0, 0.0, 1.0);
+	glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
 	glTranslatef(0.0, 0.25, 0.0);
 	glScalef(1.0, 1.9, 1.0);
-	glutSolidSphere(0.10, 30, 30);
+	esferaPeixe();
 	glPopMatrix();
 	// rabo do peixe
-	glColor3f(1.0, 1.0, 0.0);
+	glColor3f(1.0, 1.0, 1.0);
 	glPushMatrix();
 	glTranslatef(0.0, 0.0, 0.0);
 	glScalef(1.0, 1.0, 1.0);
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
-	glutSolidCone(0.08, 0.20, 30, 30);
+	conePeixe();
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
 	/*
 	// globo ocular direito
 	glPushMatrix();
@@ -387,13 +400,29 @@ void pinguimComPeixe()
 	peixe();
 	glPopMatrix();
 }
-
-void buraco()
+/*
+void buraco()	// buraco antigo
 {
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture( GL_TEXTURE_2D, texID[4] );
 	glColor3f(1.0, 1.0, 1.0);
 	circulo(0.4);
+	glDisable(GL_TEXTURE_2D);
+}
+*/
+void buraco()
+{
+	glColor3f(1.0, 1.0, 1.0);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texID[5]);
+	glPushMatrix();
+	GLUquadric *quadric = gluNewQuadric();
+	gluQuadricDrawStyle(quadric, GLU_FILL);
+	gluQuadricNormals(quadric, GLU_SMOOTH);
+	gluQuadricTexture(quadric, GL_TRUE);
+	gluDisk(quadric, 0, 0.4, 32, 1);
+	gluDeleteQuadric(quadric);
+	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 }
 
