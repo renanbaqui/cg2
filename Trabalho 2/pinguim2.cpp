@@ -54,13 +54,13 @@ GLfloat XPing= 0.0, ZPing = 1.0, distPingX = 0.0, distPingZ = 0.0;
 GLint texto = 20.0, texto2 = 20.0, texto3 = 20.0, texto4 = 20.0;
 
 // tempoConta = contador de tempo total do jogo (5 minutos)
-GLint tempoConta = 5000;
+GLint tempoConta = 5255;
 // tempoFilhote = contador de tempo de vida do filhote (1 minuto)
-GLint tempoFilhote = 1000;
+GLint tempoFilhote = 1051; //1051
 // tempoBuraco = contador de tempo de aparecimento de novo buraco (15 segundos)
-GLint tempoBuraco = 250;
-// tempoBuraco = contador de tempo de aparecimento de novo peixe (30 segundos)
-GLint tempoPeixe = 500;
+GLint tempoBuraco = 262; // 262
+// tempoPeixe = contador de tempo de aparecimento de novo peixe (30 segundos)
+GLint tempoPeixe = 524;
 
 // obtem um numero aleatorio do hardware
 std::random_device rd;
@@ -484,8 +484,8 @@ void display() {
 		glPopMatrix();
 	}
 	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
-		tempoFilhote += 3500;	// adiciona 1 minuto
+	if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
+		tempoFilhote += 1051;	// adiciona 1 minuto
 	}
 
 
@@ -542,6 +542,12 @@ void display() {
   glRasterPos3i( 1, texto2, 1 );
   glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, u);
 
+  // mensagem: caiu no buraco
+  glColor4f(1.0, 0.0, 0.0, 0.0);
+  const unsigned char* v = reinterpret_cast<const unsigned char *>("CAIU NO BURACO");
+  glRasterPos3i( 1, texto3, 1 );
+  glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, v);
+
   // mensagem: você perdeu
   glColor4f(1.0, 0.0, 0.0, 0.0);
   const unsigned char* x = reinterpret_cast<const unsigned char *>("VOCÊ PERDEU");
@@ -571,9 +577,9 @@ void display() {
 		glPopMatrix();
 	}
 	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
-		tempoFilhote += 3500;	// adiciona 1 minuto
-	}
+	/*if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
+		tempoFilhote += 1000;	// adiciona 1 minuto
+	}*/
 
 
   // canto superior direito
@@ -637,9 +643,9 @@ void display() {
 		glPopMatrix();
 	}
 	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
-		tempoFilhote += 3500;	// adiciona 1 minuto
-	}
+	/*if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
+		tempoFilhote += 1000;	// adiciona 1 minuto
+	}*/
 
 
   // canto inferior direito
@@ -697,9 +703,9 @@ void display() {
 		glPopMatrix();
 	}
 	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	if ((movePingX <= +0.4) && (movePingX >= -0.4) && (movePingZ <= +0.4) && (movePingZ >= -0.4) && (pesc == true)){
-		tempoFilhote += 3500;	// adiciona 1 minuto ao tempo para alimentar o pinguim filho
-	}
+	/*if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
+		tempoFilhote += 1000;	// adiciona 1 minuto ao tempo para alimentar o pinguim filho
+	}*/
 
 
   glutSwapBuffers();	// (required for double-buffered drawing)
@@ -851,10 +857,10 @@ void move(int passo)
 		// em caso de colisao, encerra o tempo, para as nadadeiras e insere texto
 		tempoConta = -10;
 		nadadeiras = 0;
-		texto4 = 1;
+		texto3 = 1;
 	}
 
-	// condicao de colisao com o peixe // verificar se os limites estao adequados
+	// condicao de colisao com o peixe
 	if ((movePingX <= p2x + 0.35) && (movePingX >= p2x - 0.35) && (movePingZ <= p2z + 0.35)&& (movePingZ >= p2z - 0.35)){
 		// em caso de colisao, gera nova posicao para o peixe
 		pesc = true;
@@ -871,7 +877,7 @@ void moveBuraco(int passo)
 	tempoBuraco -= 1;
 	if(tempoBuraco<0)
 	{
-		tempoBuraco += 250;
+		tempoBuraco += 262;
 		gera();
 	}
 
@@ -885,7 +891,7 @@ void movePeixe(int passo)
 	tempoPeixe -= 1;
 	if(tempoPeixe<0)
 	{
-		tempoPeixe += 500;
+		tempoPeixe += 524;
 		gera2();
 	}
 
