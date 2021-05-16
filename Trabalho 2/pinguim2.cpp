@@ -46,10 +46,7 @@ GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
 // pesc = booleana se o pinguim pescou o peixe
 bool pesc = false;
 
-GLfloat vetor[2]= {0,1}, vetorD[2]={0,0}; // vetores de movimentacao do pinguim pai
-
-// vetor[0] = cos(-(rotaping + 270)*PI/180);
-// vetor[1] = sin(-(rotaping + 270)*PI/180);
+GLfloat XPing= 0.0, ZPing = 1.0, distPingX = 0.0, distPingZ = 0.0; // variaveis de movimentacao 3D do pinguim pai
 
 // texto, texto2, texto3, texto4 = posicao do texto na tela (inicializado em 20.0 para ficar escondido)
 GLint texto = 20.0, texto2 = 20.0, texto3 = 20.0, texto4 = 20.0;
@@ -85,6 +82,13 @@ void gera2(){
 	p2x = distr3(gen);
 	p2z = distr4(gen);
 }
+// conversao de graus para radianos
+float radianos(float graus)
+{
+    float c = M_PI / 180;
+    return graus * c;
+}
+
 // bloco de gelo
 void gelo()
 {
@@ -754,40 +758,50 @@ void keyboard(int key, int x, int y){
   switch (key) {
   // seta esquerda: rotacionar o pinguim em torno do seu eixo para a esquerda
   case GLUT_KEY_LEFT:
+	distPingX = XPing*movePingX - ZPing*movePingZ;
+	distPingZ = ZPing*movePingX + XPing*movePingZ;
+
+	XPing = cos(-(radianos(rotaping + 180 + 90)));
+	ZPing = sin(-(radianos(rotaping + 180 + 90)));
+
+
+	nadadeiras = 0;	// para as nadadeiras
+
 	if(rotaping >=360) rotaping = 0;
-	rotaping += 3.0;
-	vetor[0] = cos(-(rotaping + 270)*PI/180);
-	vetor[1] = sin(-(rotaping + 270)*PI/180);
-	vetorD[0] = vetor[0]*movePingX - vetor[1]*movePingZ;
-	vetorD[1] = vetor[1]*movePingX + vetor[0]*movePingZ;
-	nadadeiras = 0;
+	rotaping += 5.0;
 	break;
   // seta direita: rotacionar o pinguim em torno do seu eixo para a direita
   case GLUT_KEY_RIGHT:
+	distPingX = XPing*movePingX - ZPing*movePingZ;
+	distPingZ = ZPing*movePingX + XPing*movePingZ;
+
+	XPing = cos(-(radianos(rotaping + 180 + 90)));
+	ZPing = sin(-(radianos(rotaping + 180 + 90)));
+
+	nadadeiras = 0;	// para as nadadeiras
+
 	if(rotaping <=-360) rotaping = 0;
-	rotaping -= 3.0;
-	vetor[0] = cos(-(rotaping + 270)*PI/180);
-	vetor[1] = sin(-(rotaping + 270)*PI/180);
-	vetorD[0] = vetor[0]*movePingX - vetor[1]*movePingZ;
-	vetorD[1] = vetor[1]*movePingX + vetor[0]*movePingZ;
-	nadadeiras = 0;
+	rotaping -= 5.0;
 	break;
-  // seta cima: mover para direcao 1 (para frente)
+  // seta cima: mover para frente
   case GLUT_KEY_UP:
-	movePingX += 0.1*vetor[0];
-	movePingZ += 0.1*vetor[1];
-	nadadeiras = 1;
+	movePingX += XPing*(0.05);
+	movePingZ += ZPing*(0.05);
+
+	nadadeiras = 1;	// move as nadadeiras
 	break;
-  // seta beixo: mover para direcao 0 (para tras)
+  // seta baixo: mover para tras
   case GLUT_KEY_DOWN:
-	movePingX += -0.1*vetor[0];
-	movePingZ += -0.1*vetor[1];
-	nadadeiras = 1;
+
+	movePingX += XPing*(-0.05);
+	movePingZ += ZPing*(-0.05);
+
+	nadadeiras = 1;	// move as nadadeiras
 	break;
-  // padrao: mover para direcao 2 (parado)
+  // padrao: parar
   default:
-    direcao = 2;
-    nadadeiras = 0;
+
+    nadadeiras = 0; // para as nadadeiras
     break;
   }
 }
