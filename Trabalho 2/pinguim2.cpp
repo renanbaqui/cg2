@@ -36,6 +36,7 @@ GLint winWidth = 800, winHeight = 600;
 GLfloat z = 0;
 // variaveis de posicao e direcao do pinguim
 GLfloat movePingX = 0.0, movePingZ = -1.0, rotaping = 0.0, rotaNadadeira = 90.0;
+// direcao do pinguim pai e condicao das nadadeiras
 GLint direcao = 2, nadadeiras = 0;
 
 // constante Pi
@@ -46,7 +47,8 @@ GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
 // pesc = booleana se o pinguim pescou o peixe
 bool pesc = false;
 
-GLfloat XPing= 0.0, ZPing = 1.0, distPingX = 0.0, distPingZ = 0.0; // variaveis de movimentacao 3D do pinguim pai
+// variaveis de movimentacao 3D do pinguim pai
+GLfloat XPing= 0.0, ZPing = 1.0, distPingX = 0.0, distPingZ = 0.0;
 
 // texto, texto2, texto3, texto4 = posicao do texto na tela (inicializado em 20.0 para ficar escondido)
 GLint texto = 20.0, texto2 = 20.0, texto3 = 20.0, texto4 = 20.0;
@@ -182,7 +184,6 @@ void DesenhaCenario()
     glEnd();
     glDisable(GL_TEXTURE_2D);
 }
-
 
 void circulo(double raio)
 {
@@ -325,7 +326,7 @@ void filhote()
 	face();
 	glPopMatrix();
 }
-
+// corpo do peixe
 void esferaPeixe()
 {
 	glEnable(GL_TEXTURE_2D);
@@ -341,7 +342,7 @@ void esferaPeixe()
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 }
-
+// rabo do peixe
 void conePeixe()
 {
 	glEnable(GL_TEXTURE_2D);
@@ -356,7 +357,7 @@ void conePeixe()
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 }
-
+// peixe completo
 void peixe()
 {
 	// corpo do peixe
@@ -391,7 +392,7 @@ void peixe()
 	glPopMatrix();
 	*/
 }
-
+// pinguim com o peixe na boca
 void pinguimComPeixe()
 {
 	glPushMatrix();
@@ -404,16 +405,7 @@ void pinguimComPeixe()
 	peixe();
 	glPopMatrix();
 }
-/*
-void buraco()	// buraco antigo
-{
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture( GL_TEXTURE_2D, texID[4] );
-	glColor3f(1.0, 1.0, 1.0);
-	circulo(0.4);
-	glDisable(GL_TEXTURE_2D);
-}
-*/
+// buraco
 void buraco()
 {
 	glColor3f(1.0, 1.0, 1.0);
@@ -435,8 +427,6 @@ void display() {
   glMatrixMode(GL_MODELVIEW); // Para operar na matriz de visualização de modelo
   glLoadIdentity();
 
-  // glRotatef(-20.0, 1.0, 0.0, 0.0); // Gira a cena para que possamos ver o topo das formas.
-  // Desenha o gelo
 
   // canto superior esquerdo
   glViewport(0, winHeight/2, winWidth/2, winHeight/2);
@@ -471,12 +461,7 @@ void display() {
   glRotatef(90, 1.0, 0.0, 0.0);
   peixe();
   glPopMatrix();
-  /*
-  glPushMatrix();
-  glTranslatef(0.0, 0.0, 0.0);
-  esferaPeixe();
-  glPopMatrix();
-  */
+
 
   // condicao se o pinguim pescar o peixe desenhar o pinguim com peixe na boca
   if (pesc==true)
@@ -537,12 +522,12 @@ void display() {
   glRotatef(90, 1.0, 0.0, 0.0);
   peixe();
   glPopMatrix();
-  /*
+
   glPushMatrix();
   glTranslatef(1.4, 0.0, -2.60);
   glRotatef(180, 1.0, 0.0, 0.0);
   DesenhaCenario();
-  glPopMatrix();*/
+  glPopMatrix();
 
   // mensagens de jogo somente na janela que esta' posicionada de 'frente' para a cena
   // mensagem: fim de jogo
@@ -738,7 +723,7 @@ void reshape(GLint w, GLint h) {
   }
 }
 
-// funcao para testes com o teclado
+// funcao de teclado para testes
 void keyboard (unsigned char key, int x, int y){
   switch (key) {
   case 'z':
@@ -758,29 +743,36 @@ void keyboard(int key, int x, int y){
   switch (key) {
   // seta esquerda: rotacionar o pinguim em torno do seu eixo para a esquerda
   case GLUT_KEY_LEFT:
-	distPingX = XPing*movePingX - ZPing*movePingZ;
-	distPingZ = ZPing*movePingX + XPing*movePingZ;
+	distPingX = XPing*movePingX + ZPing*movePingZ;
+	distPingZ = ZPing*movePingX - XPing*movePingZ;
+
 
 	XPing = cos(-(radianos(rotaping + 180 + 90)));
 	ZPing = sin(-(radianos(rotaping + 180 + 90)));
 
-
 	nadadeiras = 0;	// para as nadadeiras
 
-	if(rotaping >=360) rotaping = 0;
+	if(rotaping >= 360.0)
+	{
+		rotaping = 0.0;
+	}
 	rotaping += 5.0;
 	break;
   // seta direita: rotacionar o pinguim em torno do seu eixo para a direita
   case GLUT_KEY_RIGHT:
-	distPingX = XPing*movePingX - ZPing*movePingZ;
-	distPingZ = ZPing*movePingX + XPing*movePingZ;
+	distPingX = XPing*movePingX + ZPing*movePingZ;
+	distPingZ = ZPing*movePingX - XPing*movePingZ;
+
 
 	XPing = cos(-(radianos(rotaping + 180 + 90)));
 	ZPing = sin(-(radianos(rotaping + 180 + 90)));
 
 	nadadeiras = 0;	// para as nadadeiras
 
-	if(rotaping <=-360) rotaping = 0;
+	if(rotaping <= -360.0)
+	{
+		rotaping = 0.0;
+	}
 	rotaping -= 5.0;
 	break;
   // seta cima: mover para frente
