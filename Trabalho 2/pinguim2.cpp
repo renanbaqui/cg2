@@ -19,6 +19,9 @@
 #include <random>		// biblioteca auxiliar para numeros aleatorios
 using namespace std;
 
+// constante Pi
+const double PI = 3.1415926535898;
+
 GLuint texID[6];	// IDs de textura para as cinco texturas
 
 char const* textureFileNames[6] = { 	// nomes de arquivo para os arquivos dos quais as imagens de textura sao carregadas
@@ -30,25 +33,25 @@ char const* textureFileNames[6] = { 	// nomes de arquivo para os arquivos dos qu
 			"texturas/geloderrete.png"
        };
 
-// tamanho da janela inicial
-GLint winWidth = 800, winHeight = 600;
+// tamanho da janela
+GLint janLar = 800, janAlt = 600;
+
 // variavel de testes no teclado
 GLfloat z = 0;
+
 // variaveis de posicao e direcao do pinguim
 GLfloat movePingX = 0.0, movePingZ = -1.0, rotaping = 0.0, rotaNadadeira = 90.0;
+// variaveis de movimentacao 3D do pinguim pai
+GLfloat XPing= 0.0, ZPing = 1.0, distPingX = 0.0, distPingZ = 0.0;
 // direcao do pinguim pai e condicao das nadadeiras
 GLint direcao = 2, nadadeiras = 0;
 
-// constante Pi
-const double PI = 3.1415926535898;
+
 // coordenadas dos pontos aleatorios
 GLfloat p1x = 2.0, p1z = 2.0, p2x, p2z;
 
 // pesc = booleana se o pinguim pescou o peixe
 bool pesc = false;
-
-// variaveis de movimentacao 3D do pinguim pai
-GLfloat XPing= 0.0, ZPing = 1.0, distPingX = 0.0, distPingZ = 0.0;
 
 // texto, texto2, texto3, texto4 = posicao do texto na tela (inicializado em 20.0 para ficar escondido)
 GLint texto = 20.0, texto2 = 20.0, texto3 = 20.0, texto4 = 20.0;
@@ -56,9 +59,9 @@ GLint texto = 20.0, texto2 = 20.0, texto3 = 20.0, texto4 = 20.0;
 // tempoConta = contador de tempo total do jogo (5 minutos)
 GLint tempoConta = 5255;
 // tempoFilhote = contador de tempo de vida do filhote (1 minuto)
-GLint tempoFilhote = 1051; //1051
+GLint tempoFilhote = 1051;
 // tempoBuraco = contador de tempo de aparecimento de novo buraco (15 segundos)
-GLint tempoBuraco = 262; // 262
+GLint tempoBuraco = 262;
 // tempoPeixe = contador de tempo de aparecimento de novo peixe (30 segundos)
 GLint tempoPeixe = 524;
 
@@ -224,7 +227,7 @@ void semiesfera(int escalay, int escalax, GLfloat r) {
      }
    glEnd();
 }
-// corpo de pinguim
+// corpo do pinguim pai
 void corpo()
 {
 	// tronco
@@ -249,7 +252,7 @@ void corpo()
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
 	glTranslatef(0.8, 0.0, 0.0);
-	glRotatef(rotaNadadeira, 1.0, 0.0, 0.0); //glRotatef(rotaNadadeira, 1.0, 0.0, 0.0);
+	glRotatef(rotaNadadeira, 1.0, 0.0, 0.0);
 	glutSolidCone(0.10, 0.80, 30, 30);
 	glPopMatrix();
 	// nadadeira direita
@@ -260,6 +263,44 @@ void corpo()
 	glutSolidCone(0.10, 0.80, 30, 30);
 	glPopMatrix();
 }
+
+// corpo do pinguim filho
+void corpoFilhote()
+{
+	// tronco
+	glPushMatrix();
+	glColor3f(0.0, 0.0, 0.0);
+	glTranslatef(0.0, 0.0, 0.0);
+	glScalef(0.7, 1.0, 0.7);
+	glutSolidSphere(1.0, 30, 30);
+	glPopMatrix();
+	// pe' esquerdo
+	glPushMatrix();
+	glColor3f(0.98, 0.63, 0.01);	// cor laranja
+	glTranslatef(0.3, -1.17, 0.0);
+	semiesfera(24, 24, 0.25);
+	glPopMatrix();
+	// pe' direito
+	glPushMatrix();
+	glTranslatef(-0.3, -1.17, 0.0);
+	semiesfera(24, 24, 0.25);
+	glPopMatrix();
+	// nadadeira esquerda
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glTranslatef(0.8, 0.0, 0.0);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	glutSolidCone(0.10, 0.80, 30, 30);
+	glPopMatrix();
+	// nadadeira direita
+	glPushMatrix();
+	glColor3f(1.0, 1.0, 1.0);
+	glTranslatef(-0.8, 0.0, 0.0);
+	glRotatef(90.0, 1.0, 0.0, 0.0);
+	glutSolidCone(0.10, 0.80, 30, 30);
+	glPopMatrix();
+}
+
 // face de pinguim
 void face()
 {
@@ -321,7 +362,7 @@ void filhote()
 {
 	glScalef(0.25, 0.25, 0.25);
 	glPushMatrix();
-	corpo();
+	corpoFilhote();
 	glTranslatef(0.0, 0.0, 2.0);
 	face();
 	glPopMatrix();
@@ -357,7 +398,7 @@ void conePeixe()
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 }
-// peixe completo
+// peixe
 void peixe()
 {
 	// corpo do peixe
@@ -429,7 +470,7 @@ void display() {
 
 
   // canto superior esquerdo
-  glViewport(0, winHeight/2, winWidth/2, winHeight/2);
+  glViewport(0, janAlt/2, janLar/2, janAlt/2);
   glLoadIdentity();
   gluLookAt(0, 6.3, 0, movePingX, -0.6, movePingZ, 0, 1, 0); // janela em que a camera esta' “posicionada” acima da cena, no eixo Y
 
@@ -490,7 +531,7 @@ void display() {
 
 
   // canto inferior esquerdo
-  glViewport(0, 0, winWidth/2, winHeight/2);
+  glViewport(0, 0, janLar/2, janAlt/2);
   glLoadIdentity();
   gluLookAt(1, 0.5, 7, movePingX, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” de frente para a cena, no eixo Z
 
@@ -524,7 +565,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.4, 0.0, -2.60);
+  glTranslatef(1.4, 0.0, -2.6);
   glRotatef(180, 1.0, 0.0, 0.0);
   DesenhaCenario();
   glPopMatrix();
@@ -576,14 +617,10 @@ void display() {
 		pinguim();
 		glPopMatrix();
 	}
-	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	/*if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
-		tempoFilhote += 1000;	// adiciona 1 minuto
-	}*/
 
 
   // canto superior direito
-  glViewport(winWidth/2, winWidth/2, winWidth/2, winHeight/2);
+  glViewport(janLar/2, janLar/2, janLar/2, janAlt/2);
   glLoadIdentity();
   gluLookAt(7, 0.5, 0, movePingX, -0.6, movePingZ, 0, 1, 0); //  janela em que a camera esta' “posicionada” do lado da cena, no eixo X
 
@@ -617,7 +654,7 @@ void display() {
   glPopMatrix();
 
   glPushMatrix();
-  glTranslatef(1.4, 0.0, -2.60);
+  glTranslatef(1.4, 0.0, -3.0);
   glRotatef(180, 1.0, 0.0, 0.0);
   DesenhaCenario();
   glPopMatrix();
@@ -642,14 +679,10 @@ void display() {
 		pinguim();
 		glPopMatrix();
 	}
-	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	/*if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
-		tempoFilhote += 1000;	// adiciona 1 minuto
-	}*/
 
 
   // canto inferior direito
-  glViewport(winWidth/2, 0, winWidth/2, winHeight/2);
+  glViewport(janLar/2, 0, janLar/2, janAlt/2);
   glLoadIdentity();
   gluLookAt(3.0, 4.0, 5.0, movePingX, -0.6, movePingZ, 0, 1, 0);	// janela em que a camera esta' “posicionada” em uma posicao livre
 
@@ -702,10 +735,6 @@ void display() {
 		pinguim();
 		glPopMatrix();
 	}
-	// condicao do pinguim alimentar o filhote e aumentar o tempo
-	/*if ((movePingX <= +0.5) && (movePingX >= -0.5) && (movePingZ <= +0.5) && (movePingZ >= -0.5) && (pesc == true)){
-		tempoFilhote += 1000;	// adiciona 1 minuto ao tempo para alimentar o pinguim filho
-	}*/
 
 
   glutSwapBuffers();	// (required for double-buffered drawing)
@@ -749,13 +778,7 @@ void keyboard(int key, int x, int y){
   switch (key) {
   // seta esquerda: rotacionar o pinguim em torno do seu eixo para a esquerda
   case GLUT_KEY_LEFT:
-	distPingX = XPing*movePingX + ZPing*movePingZ;
-	distPingZ = ZPing*movePingX - XPing*movePingZ;
-
-
-	XPing = cos(-(radianos(rotaping + 180 + 90)));
-	ZPing = sin(-(radianos(rotaping + 180 + 90)));
-
+    direcao = 0;
 	nadadeiras = 0;	// para as nadadeiras
 
 	if(rotaping >= 360.0)
@@ -766,13 +789,7 @@ void keyboard(int key, int x, int y){
 	break;
   // seta direita: rotacionar o pinguim em torno do seu eixo para a direita
   case GLUT_KEY_RIGHT:
-	distPingX = XPing*movePingX + ZPing*movePingZ;
-	distPingZ = ZPing*movePingX - XPing*movePingZ;
-
-
-	XPing = cos(-(radianos(rotaping + 180 + 90)));
-	ZPing = sin(-(radianos(rotaping + 180 + 90)));
-
+	direcao = 0;
 	nadadeiras = 0;	// para as nadadeiras
 
 	if(rotaping <= -360.0)
@@ -783,6 +800,7 @@ void keyboard(int key, int x, int y){
 	break;
   // seta cima: mover para frente
   case GLUT_KEY_UP:
+
 	movePingX += XPing*(0.05);
 	movePingZ += ZPing*(0.05);
 
@@ -820,22 +838,15 @@ void initGL()
 // move = funcao de movimentacao do pinguim
 void move(int passo)
 {
-	// limite de movimento do pinguim em Z (nao funciona)
-	if(movePingZ<-2.9){
-		movePingZ -= (float)passo/70;
-	}
-	/*
-	// limite de movimento do pinguim em Z (nao funciona)
-	if((movePingZ<-2.9) || (movePingZ>2.9)) {
-		movePingZ += (float)passo/70;
-	}*/
 
-		// desenho do pinguim na direcao do movimento
-	/*	escalaping = 0.4;
-		// limite direito de movimento
-		if(moveping>0.2){
-			moveping -= (float)passo/70;
-		}*/
+	if (direcao == 0)
+	{
+		distPingX = XPing * movePingX + ZPing * movePingZ;
+		distPingZ = ZPing * movePingX + XPing * movePingZ;
+
+		XPing = cos(-(radianos(rotaping + 180 + 90)));
+		ZPing = sin(-(radianos(rotaping + 180 + 90)));
+	}
 
 	// movimentacao das nadadeiras
 	// nadadeiras paradas
@@ -864,7 +875,7 @@ void move(int passo)
 	if ((movePingX <= p2x + 0.35) && (movePingX >= p2x - 0.35) && (movePingZ <= p2z + 0.35)&& (movePingZ >= p2z - 0.35)){
 		// em caso de colisao, gera nova posicao para o peixe
 		pesc = true;
-		gera2(); // gera nova posicao peixe
+		gera2();		// gera nova posicao peixe
 	}
 
 	glutPostRedisplay();
@@ -875,6 +886,7 @@ void move(int passo)
 void moveBuraco(int passo)
 {
 	tempoBuraco -= 1;
+	// adiciona mais tempo ate gerar um novo ponto para o buraco
 	if(tempoBuraco<0)
 	{
 		tempoBuraco += 262;
@@ -889,6 +901,7 @@ void moveBuraco(int passo)
 void movePeixe(int passo)
 {
 	tempoPeixe -= 1;
+	// adiciona mais tempo ate gerar um novo ponto para o peixe
 	if(tempoPeixe<0)
 	{
 		tempoPeixe += 524;
@@ -985,7 +998,7 @@ int main(int argc, char** argv)
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(80, 80);
-  glutInitWindowSize(winWidth, winHeight);
+  glutInitWindowSize(janLar, janAlt);
   glutCreateWindow("Trabalho 2");
   initGL();
   loadTextures();
@@ -994,14 +1007,16 @@ int main(int argc, char** argv)
 
   // movimentacao do pinguim
   glutTimerFunc(10,move,1);
-
+  // movimentacao do buraco
   glutTimerFunc(10,moveBuraco,1);
+  // movimentacao do peixe
   glutTimerFunc(10,movePeixe,1);
+
+  // tempo de jogo
   glutTimerFunc(10,tempoJogo,1);
 
   // funcao do teclado
   glutKeyboardFunc(keyboard);
-
   // funcao do GLUT para teclas especiais
   glutSpecialFunc(keyboard);
 
