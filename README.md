@@ -15,7 +15,7 @@
 - Bonus points: During its movement the father penguin should flap its wings
 
 ### Other Requirements
-
+1. The penguins and fish must be modeled using spheres, ellipsoids and cones.
 1. Implemente dois atores que tenham a forma de pinguins. Modele o pinguim utilizando esferas, elipsóides e cones.
 Alguns exemplos são apresentados a seguir.
 2. Modele os peixes que irão aparecer (aleatoriamente) sob o gelo utilizando elipsóides e cones.
