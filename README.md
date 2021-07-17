@@ -16,27 +16,16 @@
 
 ### Other Requirements
 1. The penguins and fish must be modeled using spheres, ellipsoids and cones.
-1. Implemente dois atores que tenham a forma de pinguins. Modele o pinguim utilizando esferas, elipsóides e cones.
-Alguns exemplos são apresentados a seguir.
-2. Modele os peixes que irão aparecer (aleatoriamente) sob o gelo utilizando elipsóides e cones.
-3. Permita que, ao utilizar as setas do teclado, o pinguim pai se movimente de maneira correspondente. No caso das
-setas para cima e para baixo, o pinguim deve se deslocar ou para frente ou para trás, seguindo o eixo que ela está
-direcionada. Já com as setas da esquerda e da direita, o pinguim deve rotacionar em torno do seu próprio eixo.
-Questão bônus - Durante o seu deslocamento o pinguim deve movimentar as asas para frente e para trás, simulando o
-andar.
-4. Implemente o aparecimento aleatório de buracos no caminho do pinguim sob o gelo.
-5. Implemente quatro janelas para visualização da cena, definindo quatro viewports distintos, obedecendo `às seguintes
-restrições:
-• Deve haver pelo menos uma janela em que a câmera está “posicionada” acima da cena, no eixo Y;
-• Deve haver pelo menos uma janela em que a câmera está “posicionada” do lado da cena, no eixo X;
-• Deve haver pelo menos uma janela em que a câmera está “posicionada” de frente para a cena, no eixo Z;
-• Deve haver pelo menos uma janela em que a câmera está “posicionada” em uma posição livre, como por
-exemplo nas coordenadas (3.0, 2.0, 10.0).
-4. Manipule a função gluLookAt(...) de maneira a sempre manter o pinguim pai no centro da porção visível da cena. Isso
-significa que a câmera deve ter como ponto focal central a aranha, em todas as janelas do programa.
-6. Insira três texturas na cena, dando um maior grau de realismo nos personagens (pinguins e peixes), placa de gelo e
-buracos e ao redor da cena.
-• A escolha das imagens que serão utilizadas como texturas é livre.
+2. Allow that, when using the arrow keys, the father penguin moves accordingly. When pressing the up and down keys, the penguin must move forward or backward, following the axis that it is directed. However when pressing left and right keys, the penguin should rotate around its own axis. Bonus question: When moving the penguin should flap its wings forward and backward, simulating its stroll.
+3. Implement the appearance of random holes in the way of the penguin under the ice.
+4. Implement four visualization windows of the scence, defining four different viewpoints, obeying the following restrictions:
+- At least one window that the camera is positioned above the scence, in the Y axis.
+- At least one window that the camera is positioned besides the scence, in the X axis.
+- At least one window that the camera is positioned in front of the scence, in the Z axis.
+- At least one window that the camera is positioned on a free position, for example in the coordinates (3.0, 2.0, 10.0).
+5. Manipulate the gluLookAt(...) funcion in a way that it always keeps the father penguin at the center of the visible area of the scence. That means that the camera must have the penguin as its central focus, in all the windows of the program.
+6. Add three textures on the scene, giving a larger degree of realism to the characters (penguins and fishes), ice sheet, holes and background.
+- The choice of images that are going to be used as textures is free.
 
 > Made using Eclipse IDE, OpenGL and GLUT
 
