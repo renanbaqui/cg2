@@ -1,4 +1,4 @@
-# Computer Graphics University Project - 3D Penguin Game [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Terminal](https://badgen.net/badge/icon/terminal?icon=terminal&label)](https://www.microsoft.com/en-us/windows)
+# Computer Graphics University Project - 3D Penguin Game [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Windows](https://badgen.net/badge/icon/windows?icon=windows&label](https://www.microsoft.com/en-us/windows)
 
 ## Project Requirements
 
